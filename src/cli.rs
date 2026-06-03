@@ -284,6 +284,9 @@ enum Commands {
 
     #[command(about = "Show the working tree status", alias = "st")]
     Status(command::status::StatusArgs),
+    //注册 stats 命令
+    #[command(about = "统计当前工作目录中的文件分布")]
+    Stats(StatsArgs),
     #[command(about = "Add file contents to the index")]
     Add(command::add::AddArgs),
     #[command(
@@ -438,6 +441,14 @@ enum Commands {
         hide = true
     )]
     Hooks(command::hooks::HooksArgs),
+}
+
+//新增参数结构体
+#[derive(clap::Args, Debug, Clone)]
+pub struct StatsArgs {
+    /// 是否以 JSON 格式输出结果
+    #[arg(long = "json-out")] 
+    pub json_format: bool, 
 }
 
 #[derive(Subcommand, Debug)]
@@ -1205,6 +1216,7 @@ pub async fn parse_async(args: Option<&[&str]>) -> CliResult<()> {
         Commands::Agent(cmd_args) => command::agent::execute_safe(cmd_args, &output).await?,
         Commands::Hooks(cmd_args) => command::hooks::execute_safe(cmd_args, &output).await?,
         Commands::Bisect(bisect_cmd) => command::bisect::execute_safe(bisect_cmd, &output).await?,
+        Commands::Stats(args) => {command::stats::execute_safe(args, &output).await?;}
     }
 
     // Check for warnings when --exit-code-on-warning is active.
