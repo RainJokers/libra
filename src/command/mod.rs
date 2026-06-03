@@ -75,6 +75,8 @@ pub mod stash;
 pub mod status;
 pub mod switch;
 pub mod web_assets;
+pub mod stats;
+
 
 use std::{io, io::Write, path::Path};
 
